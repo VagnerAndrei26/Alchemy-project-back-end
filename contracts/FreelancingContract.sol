@@ -26,19 +26,29 @@ contract FreelancingContract {
     using PriceAggregator for uint;
     
     ///Basic data structure that is used to make new jobs on the platfrom
-    ///dev State variables
+    /// State variables
     struct Job {
         address employer;
+        bool acceptPay;
         string jobTitle;
         string jobDescription;
         uint256 payCheckInUsd;
         address pending;
         address employee;
-        bool acceptPay;
         uint timePassed;
     }
+
+    /**
+     * @dev A mapping of an adress to a boolean to see if an address is in the pending state
+     */
     mapping(address => bool) private s_pending;
+    /**
+     * @dev A mapping of an unsigned integer to a Job struct to give each job an ID
+     */
     mapping(uint => Job) public s_Jobs;
+    /**
+     * @dev A mapping of an address to an unsigned integer to show how many times an address has been paid;
+     */
     mapping(address => uint) private s_timesHasBeenPaid;
     uint256 private s_numberOfListedJobs;
 
@@ -153,11 +163,11 @@ contract FreelancingContract {
     function payEmployee(uint256 _id) external payable onlyEmployer(_id) {
         Job storage job = s_Jobs[_id];
         uint payCheck = job.payCheckInUsd * 1e18;
-        if(msg.value.getConversionRate() < payCheck) {
-            revert FreelancingBasicContract__NotEnoughEtherProvided();
-        }
         if(block.timestamp < job.timePassed) {
             revert FreelancingBasicContract__PayOnlyOnceAMonth();
+        }
+        if(msg.value.getConversionRate() < payCheck) {
+            revert FreelancingBasicContract__NotEnoughEtherProvided();
         }
         job.timePassed = block.timestamp + 30 days;
         (bool success, ) = payable(job.employee).call { value: msg.value }("");
@@ -224,6 +234,36 @@ contract FreelancingContract {
     function getApplicant(uint _id) public view returns(address){
         Job memory job = s_Jobs[_id];
         return job.pending;
+    }
+
+     function getJobTitle(uint _id) public view returns(string memory){
+        Job memory job = s_Jobs[_id];
+        return job.jobTitle;
+    }
+
+     function getJobDescription(uint _id) public view returns(string memory){
+        Job memory job = s_Jobs[_id];
+        return job.jobDescription;
+    }
+
+     function getEmployer(uint _id) public view returns(address){
+        Job memory job = s_Jobs[_id];
+        return job.employer;
+    }
+
+     function getEmployee(uint _id) public view returns(address){
+        Job memory job = s_Jobs[_id];
+        return job.employee;
+    }
+
+    function getAcceptPay(uint _id) public view returns(bool){
+        Job memory job = s_Jobs[_id];
+        return job.acceptPay;
+    }
+
+    function getPayCheckInUsd(uint _id) public view returns(uint){
+        Job memory job = s_Jobs[_id];
+        return job.payCheckInUsd;
     }
 }
 
