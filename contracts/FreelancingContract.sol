@@ -30,12 +30,12 @@ contract FreelancingContract {
     struct Job {
         address employer;
         bool acceptPay;
+        uint16 payCheckInUsd;
         string jobTitle;
         string jobDescription;
-        uint256 payCheckInUsd;
         address pending;
         address employee;
-        uint timePassed;
+        uint256 timePassed;
     }
 
     /**
@@ -136,7 +136,7 @@ contract FreelancingContract {
      * @param _value The amount of money the employer agreed to pay the employee in dolars
      * @param _id The id of the specific job
      */
-    function setPayCheck(uint _value, uint _id) external  onlyEmployer(_id) {
+    function setPayCheck(uint16 _value, uint _id) external  onlyEmployer(_id) {
         Job storage job = s_Jobs[_id];
         if(!checkStatus(_id)) {
             revert FreelancingBasicContract__JobNotApproved();
