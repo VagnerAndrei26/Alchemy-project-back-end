@@ -14,6 +14,8 @@ module.exports = {
 },
   gasReporter:{
     currency: "EUR",
-    enabled:(process.env.ETH_GAS_PRICE) ? true : false
+    enabled:(process.env.ETH_GAS_PRICE) ? true : false,
+    gasPriceApi:process.env.ETH_GAS_PRICE,
+    coinmarketcap:process.env.COINMARKET_CAP_API
   }
 }
