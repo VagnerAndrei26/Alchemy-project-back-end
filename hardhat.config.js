@@ -12,4 +12,8 @@ module.exports = {
       }
     },
 },
+  gasReporter:{
+    currency: "EUR",
+    enabled:(process.env.ETH_GAS_PRICE) ? true : false
+  }
 }
