@@ -199,7 +199,7 @@ describe("Freelancing Contract", function () {
       await freelancingContract.connect(employer).setPayCheck(50,0);
       await time.increase(2593000)
 
-      await expect(freelancingContract.connect(employer).payEmployee(0,{value: ethers.utils.parseEther("0.03")})).to.not.reverted;
+      await expect(freelancingContract.connect(employer).payEmployee(0,{value: ethers.utils.parseEther("0.04")})).to.not.reverted;
     })
   })
   describe("Dismiss the employee" , function() {
@@ -232,7 +232,7 @@ describe("Freelancing Contract", function () {
       await freelancingContract.connect(employee).acceptChangeOfPayCheck(0);
       await freelancingContract.connect(employer).setPayCheck(50,0);
       await time.increase(2593000);
-      await freelancingContract.connect(employer).payEmployee(0,{value: ethers.utils.parseEther("0.03")});
+      await freelancingContract.connect(employer).payEmployee(0,{value: ethers.utils.parseEther("0.04")});
       
       await expect(freelancingContract.connect(employer).dismissEmployee(0)).to.not.be.reverted;
       
